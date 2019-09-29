@@ -21,6 +21,7 @@ fun main(args: Array<String>) {
 fun beans() = beans {
     bean<UserHandler>()
     bean<ArticleHandler>()
+    bean { initializeData(ref(), ref()) }
     bean {
         router {
             "/api/user".nest {
@@ -35,6 +36,22 @@ fun beans() = beans {
             }
         }
     }
+}
+
+fun initializeData(userRepository: UserRepository, articleRepository: ArticleRepository) {
+    val smaldini = userRepository.save(User("smaldini", "Stéphane", "Maldini"))
+    articleRepository.save(Article(
+            title = "Reactor Bismuth is out",
+            headline = "Lorem ipsum",
+            content = "dolor sit amet",
+            author = smaldini
+    ))
+    articleRepository.save(Article(
+            title = "Reactor Aluminium has landed",
+            headline = "Lorem ipsum",
+            content = "dolor sit amet",
+            author = smaldini
+    ))
 }
 
 class UserHandler(private val repository: UserRepository) {
